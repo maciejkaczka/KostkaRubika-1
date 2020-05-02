@@ -1,41 +1,17 @@
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
-import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.universe.SimpleUniverse;
-
-import com.sun.j3d.utils.geometry.*;
-
-import com.sun.j3d.utils.universe.*;
-
 import javax.media.j3d.*;
-
 import javax.swing.*;
-import javax.vecmath.*;
-
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.DirectionalLight;
-import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
-import javax.vecmath.Vector3f;
+import javax.vecmath.Point3f;
 import java.awt.*;
 
-import com.sun.j3d.utils.picking.*;
-
-import com.sun.j3d.utils.universe.SimpleUniverse;
-
-import com.sun.j3d.utils.geometry.*;
-
-import javax.media.j3d.*;
-
-import javax.vecmath.*;
-
-import java.awt.event.*;
-
-import java.awt.*;
 
 public class KostkaRubika extends JFrame {
 
-
+            public Cubie[][][] kubiki = new Cubie[3][3][3];
 
             public KostkaRubika() {
 
@@ -73,15 +49,36 @@ public class KostkaRubika extends JFrame {
         TransformGroup objRotate = new TransformGroup();
         objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        int i=-1,j=-1,k=-1;
 
-
-        for(float i=0;i<0.93;i=i+(float)0.31)
+        for(float x=0;x<0.93;x=x+(float)0.31)
         {
-            for(float j=0;j<0.93;j=j+(float)0.31)
+            j=-1;
+            i++;
+            System.out.println("i :" + i);
+            for(float y=0;y<0.93;y=y+(float)0.31)
             {
-                for(float k=0;k<0.93;k=k+(float)0.31)
+                k=-1;
+                j++;
+                System.out.println("j :" + j);
+                for(float z=0;z<0.93;z=z+(float)0.31)
                 {
-                    Cubie kostka = new Cubie(size,i,j,k);
+                    k++;
+                    System.out.println("k :" + k);
+                    Cubie kostka = new Cubie(size,x,y,z);
+                    kubiki[i][j][k] = kostka;
+
+
+                    //jebanie sie z tekstem---------------------------------
+                    Font3D font = new Font3D(new Font("Arial", Font.PLAIN, 1), new FontExtrusion());
+                    Text3D tekst = new Text3D(font,"indeks" + i + j +k);
+                    Point3f punkt =  new Point3f(i,j,k);
+                    tekst.setPosition(punkt);
+                    Shape3D textShape = new Shape3D();
+                    textShape.setGeometry(tekst);
+                    objRotate.addChild(textShape);
+                    //--------------------------------------------
+
                     objRotate.addChild(kostka.getTg());
                 }
             }
@@ -94,7 +91,8 @@ public class KostkaRubika extends JFrame {
 
         MouseRotate myMouseRotate = new MouseRotate();
         myMouseRotate.setTransformGroup(objRotate);
-        myMouseRotate.setSchedulingBounds(new BoundingSphere());
+        Point3d punktObrotu = new Point3d(0.48,0.48,0.48);
+        myMouseRotate.setSchedulingBounds(new BoundingSphere( punktObrotu,0.48));
         objRoot.addChild(myMouseRotate);
 
 

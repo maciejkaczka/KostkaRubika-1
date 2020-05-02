@@ -14,7 +14,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1bJ72QWJpcKEfFUapordPsBnG0N" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -26,7 +30,7 @@
     <property name="project.structure.last.edited" value="Global Libraries" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunManager">
     <configuration name="KostkaRubika" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -56,26 +60,34 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1415" height="174" key="GridCell.Tab.0.bottom" timestamp="1588426389188">
+    <state x="512" y="115" key="#com.intellij.refactoring.encapsulateFields.EncalpsulateFieldsDialog" timestamp="1588430425776">
       <screen x="78" y="0" width="1458" height="864" />
     </state>
-    <state width="1415" height="174" key="GridCell.Tab.0.bottom/78.0.1458.864@78.0.1458.864" timestamp="1588426389188" />
-    <state width="1415" height="174" key="GridCell.Tab.0.center" timestamp="1588426389188">
+    <state x="512" y="115" key="#com.intellij.refactoring.encapsulateFields.EncalpsulateFieldsDialog/78.0.1458.864@78.0.1458.864" timestamp="1588430425776" />
+    <state width="1415" height="162" key="GridCell.Tab.0.bottom" timestamp="1588432711366">
       <screen x="78" y="0" width="1458" height="864" />
     </state>
-    <state width="1415" height="174" key="GridCell.Tab.0.center/78.0.1458.864@78.0.1458.864" timestamp="1588426389188" />
-    <state width="1415" height="174" key="GridCell.Tab.0.left" timestamp="1588426389188">
+    <state width="1415" height="162" key="GridCell.Tab.0.bottom/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
+    <state width="1415" height="162" key="GridCell.Tab.0.center" timestamp="1588432711366">
       <screen x="78" y="0" width="1458" height="864" />
     </state>
-    <state width="1415" height="174" key="GridCell.Tab.0.left/78.0.1458.864@78.0.1458.864" timestamp="1588426389188" />
-    <state width="1415" height="174" key="GridCell.Tab.0.right" timestamp="1588426389188">
+    <state width="1415" height="162" key="GridCell.Tab.0.center/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
+    <state width="1415" height="162" key="GridCell.Tab.0.left" timestamp="1588432711366">
       <screen x="78" y="0" width="1458" height="864" />
     </state>
-    <state width="1415" height="174" key="GridCell.Tab.0.right/78.0.1458.864@78.0.1458.864" timestamp="1588426389188" />
-    <state x="504" y="256" key="com.intellij.ide.util.TipDialog" timestamp="1588411634792">
+    <state width="1415" height="162" key="GridCell.Tab.0.left/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
+    <state width="1415" height="162" key="GridCell.Tab.0.right" timestamp="1588432711366">
       <screen x="78" y="0" width="1458" height="864" />
     </state>
-    <state x="504" y="256" key="com.intellij.ide.util.TipDialog/78.0.1458.864@78.0.1458.864" timestamp="1588411634792" />
+    <state width="1415" height="162" key="GridCell.Tab.0.right/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
+    <state x="316" y="74" key="SettingsEditor" timestamp="1588430074549">
+      <screen x="78" y="0" width="1458" height="864" />
+    </state>
+    <state x="316" y="74" key="SettingsEditor/78.0.1458.864@78.0.1458.864" timestamp="1588430074549" />
+    <state x="504" y="256" key="com.intellij.ide.util.TipDialog" timestamp="1588429839170">
+      <screen x="78" y="0" width="1458" height="864" />
+    </state>
+    <state x="504" y="256" key="com.intellij.ide.util.TipDialog/78.0.1458.864@78.0.1458.864" timestamp="1588429839170" />
     <state x="470" y="181" width="672" height="678" key="search.everywhere.popup" timestamp="1588412036744">
       <screen x="78" y="0" width="1458" height="864" />
     </state>
