@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ae2fa3cf-793b-4682-8dc7-0a4cc3b204c0" name="Default Changelist" comment="" />
+    <list default="true" id="ae2fa3cf-793b-4682-8dc7-0a4cc3b204c0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KostkaRubika.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KostkaRubika.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,21 +67,29 @@
       <screen x="78" y="0" width="1458" height="864" />
     </state>
     <state x="512" y="115" key="#com.intellij.refactoring.encapsulateFields.EncalpsulateFieldsDialog/78.0.1458.864@78.0.1458.864" timestamp="1588430425776" />
-    <state width="1415" height="162" key="GridCell.Tab.0.bottom" timestamp="1588432711366">
-      <screen x="78" y="0" width="1458" height="864" />
+    <state x="454" y="24" key="CommitChangelistDialog2" timestamp="1588520677999">
+      <screen x="0" y="0" width="1600" height="860" />
     </state>
+    <state x="454" y="24" key="CommitChangelistDialog2/0.0.1600.860@0.0.1600.860" timestamp="1588520677999" />
+    <state width="1557" height="222" key="GridCell.Tab.0.bottom" timestamp="1588520678060">
+      <screen x="0" y="0" width="1600" height="860" />
+    </state>
+    <state width="1557" height="222" key="GridCell.Tab.0.bottom/0.0.1600.860@0.0.1600.860" timestamp="1588520678060" />
     <state width="1415" height="162" key="GridCell.Tab.0.bottom/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
-    <state width="1415" height="162" key="GridCell.Tab.0.center" timestamp="1588432711366">
-      <screen x="78" y="0" width="1458" height="864" />
+    <state width="1557" height="222" key="GridCell.Tab.0.center" timestamp="1588520678060">
+      <screen x="0" y="0" width="1600" height="860" />
     </state>
+    <state width="1557" height="222" key="GridCell.Tab.0.center/0.0.1600.860@0.0.1600.860" timestamp="1588520678060" />
     <state width="1415" height="162" key="GridCell.Tab.0.center/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
-    <state width="1415" height="162" key="GridCell.Tab.0.left" timestamp="1588432711366">
-      <screen x="78" y="0" width="1458" height="864" />
+    <state width="1557" height="222" key="GridCell.Tab.0.left" timestamp="1588520678060">
+      <screen x="0" y="0" width="1600" height="860" />
     </state>
+    <state width="1557" height="222" key="GridCell.Tab.0.left/0.0.1600.860@0.0.1600.860" timestamp="1588520678060" />
     <state width="1415" height="162" key="GridCell.Tab.0.left/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
-    <state width="1415" height="162" key="GridCell.Tab.0.right" timestamp="1588432711366">
-      <screen x="78" y="0" width="1458" height="864" />
+    <state width="1557" height="222" key="GridCell.Tab.0.right" timestamp="1588520678060">
+      <screen x="0" y="0" width="1600" height="860" />
     </state>
+    <state width="1557" height="222" key="GridCell.Tab.0.right/0.0.1600.860@0.0.1600.860" timestamp="1588520678060" />
     <state width="1415" height="162" key="GridCell.Tab.0.right/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
     <state x="316" y="74" key="SettingsEditor" timestamp="1588430074549">
       <screen x="78" y="0" width="1458" height="864" />
