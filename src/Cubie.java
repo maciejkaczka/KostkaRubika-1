@@ -1,11 +1,14 @@
 import javax.media.j3d.*;
+import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Color3f;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import com.sun.j3d.utils.geometry.Box;
 
 public class Cubie {
     Box kubik;
-    TransformGroup tg;
+   TransformGroup przesuniecie;
+   TransformGroup rotacja;
 
     private  Color3f Red = new Color3f(1.0f, 0.0f, 0.0f);
     private  Color3f Green = new Color3f(0.0f, 1.0f, 0.0f);
@@ -39,21 +42,44 @@ public class Cubie {
                         shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
                         shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
                         shape.setAppearance(app[i]);
+
+
                     }
 
                     //transformacja przesuwająca kostki na swoje miejsca
-                    tg = new TransformGroup();
-                     Transform3D transform = new Transform3D();
-                     Vector3f vector = new Vector3f( x, y, z);
+
+
+                        double zmienna=270;
+
+
+                    Transform3D transform = new Transform3D();
+                    Transform3D tf = new Transform3D();
+                     Vector3d vector = new Vector3d( x, y, z);
                      transform.setTranslation(vector);
-                     tg.setTransform(transform);
-                     tg.addChild(kubik);
+                     tf.rotX(zmienna);
+                     przesuniecie = new TransformGroup(transform);
+                    przesuniecie.addChild(kubik);
+
+                    rotacja = new TransformGroup(tf);
+                    rotacja.addChild(przesuniecie);
+
+
+
+
+            //Transform3D transform = new Transform3D();
+           // Vector3d vector = new Vector3d( x, y, z);
+            //transform.setTranslation(vector);
+            //TransformGroup przesuniecie = new TransformGroup(transform);
+
+           // przesuniecie.setTransform(transform);
+            //przesuniecie.addChild(kubik);
+
 
         }
         //gettery
         public TransformGroup getTg()
         {
-            return tg;
+            return rotacja;
         }
 
         public Appearance getAppearance(int i)
