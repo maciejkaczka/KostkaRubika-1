@@ -1,23 +1,16 @@
-import com.sun.j3d.utils.applet.MainFrame;
-import com.sun.j3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
 import com.sun.j3d.utils.universe.SimpleUniverse;
-import com.sun.j3d.utils.universe.ViewingPlatform;
 
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
-import javax.xml.crypto.dsig.TransformService;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Enumeration;
 
 
 public class KostkaRubika extends JFrame implements KeyListener, ActionListener {
@@ -98,25 +91,28 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
 
 
-                    /*Poniżej dostawanie szału :)))
 
 
                     Font czcionka = new Font("Calibri",1,1);
-                    czcionka = czcionka.deriveFont((float) 0.02);
+                    czcionka = czcionka.deriveFont((float) 0.1);
 
                     Font3D font3d = new Font3D(czcionka,null);
-
                     // Build 3D text geometry using the 3D font
                     Text3D tex = new Text3D();
                     tex.setFont3D(font3d);
-                    String informacja = new String("3");
-                    tex.setString(informacja);
+
+                    tex.setString("i"+i+j+k);
                     System.out.println(i +" " + " "+j);
                     tex.setAlignment(Text3D.ALIGN_CENTER);
-                    //Material m = new Material();
+
+
                     Appearance app = new Appearance();
-                    //app.setMaterial(m);
+
+
                     Shape3D shape = new Shape3D(tex,app);
+
+
+
                     Transform3D transform = new Transform3D();
                      Vector3d vector = new Vector3d( x+1, y, z);
                     transform.setTranslation(vector);
@@ -124,10 +120,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                     przesuniecie.addChild(shape);
                     obrocsie.addChild(przesuniecie);
 
-                     */
 
 
-                    obrocsie.addChild(kostka.getTg());
+
+                    obrocsie.addChild(kostka.getTgZ());
                 }
             }
 
@@ -156,8 +152,8 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == 'r') {
-            System.out.println("wcisnąalem r");
+        if (e.getKeyChar() == 'l') {
+            System.out.println("wcisnąalem r=l");
             //wyjasnienie masz przy l
 
             for (int k = 0; k < 3; k++) {
@@ -166,12 +162,12 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                     Transform3D temp;
 
-                    temp = kubiki[0][j][k].getTransform();
+                    temp = kubiki[0][j][k].getTransformX();
                     Transform3D tempDelta = new Transform3D();
                     tempDelta.rotX(Math.PI / 2);
                     temp.mul(tempDelta);
 
-                    kubiki[0][j][k].getTg().setTransform(temp);
+                    kubiki[0][j][k].getTgX().setTransform(temp);
 
 
 
@@ -179,29 +175,32 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 }
             }
             //tutaj obracamy macierz
-            kubiki = jebacObracanie(kubiki);
+            kubiki = Lprim(kubiki);
         }
 
-        if (e.getKeyChar() == 'l') {
+        if (e.getKeyChar() == 'b') {
             for (int k = 0; k < 3; k++) {
                 for (int i = 0; i < 3; i++) {
 
-                    System.out.println("wcisnalem l");
-                    //robimy chwilową transforme
+                    System.out.println("wcisnalem b");
+
                     Transform3D temp;
-                    //bierzemy naszą pustą transformacje kubikow i wpisujemy do temp
-                    temp = kubiki[i][0][k].getTransform();
-                    //obrot
+
+                    temp = kubiki[i][0][k].getTransformY();
+
                     Transform3D tempDelta = new Transform3D();
-                    tempDelta.rotY(0.03);
-                    //mnozymy macierz obrotu razy macierz naszej transformacji pustej rotate
+
+
+                    tempDelta.rotY(Math.PI/2);
+
                     temp.mul(tempDelta);
-                    //przypisujemy pustej transfromacji wartosc temp
-                    kubiki[i][0][k].getTg().setTransform(temp);
+
+                    kubiki[i][0][k].getTgY().setTransform(temp);
 
 
                 }
             }
+           kubiki= B(kubiki);
 
 
         }
@@ -216,22 +215,44 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
 
     }
-    public Cubie[][][] jebacObracanie (Cubie[][][] kubiki)
+    public Cubie[][][] Lprim(Cubie[][][] kubiki)
     {
         System.out.println("translacja macierzy");
         Cubie[][][] temp ;
-        temp= kubiki.clone();
-        temp[0][0][0] = kubiki[0][0][0];
-        temp[0][0][1] = kubiki[0][0][1];
-        temp[0][0][2] = kubiki[0][0][2];
+        temp= kubiki;
+        temp[0][0][0] = kubiki[0][0][2];
+        temp[0][0][1] = kubiki[0][1][2];
+        temp[0][0][2] = kubiki[0][2][2];
 
-        temp[0][1][0] = kubiki[0][1][0];
+        temp[0][1][0] = kubiki[0][0][1];
         temp[0][1][1] = kubiki[0][1][1];
-        temp[0][1][2] = kubiki[0][1][2];
+        temp[0][1][2] = kubiki[0][2][1];
 
-        temp[0][2][0] = kubiki[0][2][0];
-        temp[0][2][1] = kubiki[0][2][1];
-        temp[0][2][2] = kubiki[0][2][2];
+        temp[0][2][0] = kubiki[0][0][0];
+        temp[0][2][1] = kubiki[0][1][0];
+        temp[0][2][2] = kubiki[0][2][0];
+
+
+
+        return temp;
+    }
+
+    public Cubie[][][] B(Cubie[][][] kubiki)
+    {
+        System.out.println("translacja macierzy");
+        Cubie[][][] temp ;
+        temp= kubiki;
+        temp[0][0][0] = kubiki[2][0][0];
+        temp[0][0][1] = kubiki[1][0][0];
+        temp[0][0][2] = kubiki[0][0][0];
+
+        temp[1][0][0] = kubiki[2][0][1];
+        temp[1][0][1] = kubiki[1][0][1];
+        temp[1][0][2] = kubiki[0][0][1];
+
+        temp[2][0][0] = kubiki[2][0][2];
+        temp[2][0][1] = kubiki[1][0][2];
+        temp[2][0][2] = kubiki[0][0][2];
 
 
 

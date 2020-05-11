@@ -1,15 +1,16 @@
 
 import javax.media.j3d.*;
-import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
+
 import com.sun.j3d.utils.geometry.Box;
 
 public class Cubie {
     Box kubik;
     TransformGroup przesuniecie;
-    TransformGroup rotacja;
+    TransformGroup rotacjaX;
+    TransformGroup rotacjaY;
+    TransformGroup rotacjaZ;
 
 
     private  Color3f Red = new Color3f(1.0f, 0.0f, 0.0f);
@@ -61,27 +62,63 @@ public class Cubie {
         przesuniecie = new TransformGroup(transform);
         przesuniecie.addChild(kubik);
 
-        rotacja = new TransformGroup(tf);
+        rotacjaX = new TransformGroup(tf);
 
-        rotacja.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        rotacja.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        rotacja.addChild(przesuniecie);
+        rotacjaX.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        rotacjaX.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        rotacjaX.addChild(przesuniecie);
+
+        rotacjaY = new TransformGroup(tf);
+
+        rotacjaY.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        rotacjaY.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        rotacjaY.addChild(rotacjaX);
 
 
+        rotacjaZ = new TransformGroup(tf);
+
+        rotacjaZ.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        rotacjaZ.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        rotacjaZ.addChild(rotacjaY);
 
     }
     //gettery
-    public TransformGroup getTg()
+    public TransformGroup getTgZ()
     {
-        return rotacja;
+        return rotacjaZ;
+    }
+    public TransformGroup getTgY()
+    {
+        return rotacjaY;
+    }
+    public TransformGroup getTgX()
+    {
+        return rotacjaX;
     }
     // nasza zmienna transformacja
-    public Transform3D getTransform()
+    public Transform3D getTransformX()
     {
         Transform3D temporary = new Transform3D();
-         rotacja.getTransform(temporary);
+         rotacjaX.getTransform(temporary);
          return temporary;
     }
+
+    public Transform3D getTransformY()
+    {
+        Transform3D temporary = new Transform3D();
+        rotacjaY.getTransform(temporary);
+        return temporary;
+    }
+
+    public Transform3D getTransformZ()
+    {
+        Transform3D temporary = new Transform3D();
+        rotacjaZ.getTransform(temporary);
+        return temporary;
+    }
+
+
+
     public Appearance getAppearance(int i)
     {
 
