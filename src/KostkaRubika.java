@@ -1,26 +1,26 @@
-import com.sun.j3d.utils.applet.MainFrame;
-import com.sun.j3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.universe.SimpleUniverse;
+
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
+import javax.vecmath.Color3f;
+import javax.vecmath.Vector3d;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Enumeration;
 
 
 public class KostkaRubika extends JFrame implements KeyListener, ActionListener {
-   // private Button go = new Button("Go");
-    //private Timer timer;
+
     public Cubie[][][] kubiki = new Cubie[3][3][3];
-   TransformGroup keyboardInput = new TransformGroup();
+    TransformGroup obrocsie;
+
+
 
     public KostkaRubika() {
 
@@ -34,13 +34,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         Canvas3D canvas3D = new Canvas3D(config);
         canvas3D.setPreferredSize(new Dimension(800, 600));
         add(canvas3D);
-       // go.addActionListener(this);
+        // go.addActionListener(this);
 
         canvas3D.addKeyListener(this);
-       // timer = new Timer(100, this);
-        //Panel panel = new Panel();
-        //add("North", panel);
-        //panel.add(go);
+
         pack();
         setVisible(true);
 
@@ -48,6 +45,9 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         BranchGroup scena = createSceneGraph();
         scena.compile();
         SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
+
+
+
 
         simpleU.getViewingPlatform().setNominalViewingTransform();
         simpleU.addBranchGraph(scena);
@@ -61,13 +61,19 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
         float size = (float) 0.15;
 
+        obrocsie = new TransformGroup();
 
-        keyboardInput.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        keyboardInput.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        obrocsie.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        obrocsie.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+
+
+
 
         TransformGroup objRotate = new TransformGroup();
         objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+
+        objRotate.addChild(obrocsie);
         int i = -1, j = -1, k = -1;
 
         for (float x = (float) -0.31; x < 0.32; x = x + (float) 0.31) {
@@ -81,7 +87,36 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                     Cubie kostka = new Cubie(size, x, y, z);
                     kubiki[i][j][k] = kostka;
 
-                    objRotate.addChild(kostka.getTg());
+
+
+
+
+                    Font czcionka = new Font("Calibri",1,1);
+                    czcionka = czcionka.deriveFont((float) 0.1);
+
+                    Font3D font3d = new Font3D(czcionka,null);
+                    // Build 3D text geometry using the 3D font
+                    Text3D tex = new Text3D();
+                    tex.setFont3D(font3d);
+
+                    tex.setString("i"+i+j+k);
+                    System.out.println(i +" " + " "+j);
+                    tex.setAlignment(Text3D.ALIGN_CENTER);
+
+
+                    Appearance app = new Appearance();
+
+
+                    Shape3D shape = new Shape3D(tex,app);
+
+
+                    Transform3D transform = new Transform3D();
+                     Vector3d vector = new Vector3d( x+1, y, z);
+                    transform.setTranslation(vector);
+                    TransformGroup przesuniecie = new TransformGroup(transform);
+                    przesuniecie.addChild(shape);
+                    obrocsie.addChild(przesuniecie);
+                    obrocsie.addChild(kostka.getTgX());
                 }
             }
 
@@ -93,6 +128,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         myMouseRotate.setTransformGroup(objRotate);
         myMouseRotate.setSchedulingBounds(new BoundingSphere());
         objRoot.addChild(myMouseRotate);
+
 
         return objRoot;
     }
@@ -109,14 +145,19 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar()=='r'){
-            Transform3D rotation = new Transform3D();
-            //double angle=90;
-            //rotation.rotY(angle);
-            //keyboardInput.addChild(kubiki[1][1][1]);
-            //kubiki[1][1][1].setTransform(rotation);
-        };
+        if (e.getKeyChar() == 'l') {
+            System.out.println("wcisnąalem l");
 
+
+            kubiki = Lprim(kubiki);
+        }
+
+        if (e.getKeyChar() == 'b') {
+
+           kubiki= B(kubiki);
+
+
+        }
     }
 
     @Override
@@ -128,7 +169,76 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
 
     }
-    public void R(){
+    public Cubie[][][] Lprim(Cubie[][][] kubiki)
+    {
+
+        System.out.println("translacja macierzy");
+        Cubie[][][] temp  = new Cubie[3][3][3];
+        temp = kubiki.clone();
+
+
+        Color3f kolortemp1 = kubiki[0][2][2].getColor(Box.FRONT);
+        Color3f kolortemp2 = kubiki[0][1][2].getColor(Box.FRONT);
+        Color3f kolortemp3 = kubiki[0][0][2].getColor(Box.FRONT);
+
+
+        temp[0][2][2].setColor(Box.FRONT,kubiki[0][2][0].getColor(Box.TOP));
+        temp[0][1][2].setColor(Box.FRONT,kubiki[0][2][1].getColor(Box.TOP));
+        temp[0][0][2].setColor(Box.FRONT,kubiki[0][2][2].getColor(Box.TOP));
+
+        temp[0][2][0].setColor(Box.TOP,kubiki[0][0][0].getColor(Box.BACK));
+        temp[0][2][1].setColor(Box.TOP,kubiki[0][1][0].getColor(Box.BACK));
+        temp[0][2][2].setColor(Box.TOP,kubiki[0][2][0].getColor(Box.BACK));
+
+        temp[0][0][0].setColor(Box.BACK,kubiki[0][0][2].getColor(Box.BOTTOM));
+        temp[0][1][0].setColor(Box.BACK,kubiki[0][0][1].getColor(Box.BOTTOM));
+        temp[0][2][0].setColor(Box.BACK,kubiki[0][0][0].getColor(Box.BOTTOM));
+
+        temp[0][0][2].setColor(Box.BOTTOM,kolortemp1);
+        temp[0][0][1].setColor(Box.BOTTOM,kolortemp2);
+        temp[0][0][0].setColor(Box.BOTTOM,kolortemp3);
+
+
+
+        return temp;
+
+
 
     }
+
+    public Cubie[][][] B(Cubie[][][] kubiki)
+    {
+        System.out.println("translacja macierzy");
+        Cubie[][][] temp  = new Cubie[3][3][3];
+        temp= kubiki.clone();
+
+        Color3f kolortemp1 = kubiki[0][0][2].getColor(Box.FRONT);
+        Color3f kolortemp2 = kubiki[1][0][2].getColor(Box.FRONT);
+        Color3f kolortemp3 = kubiki[2][0][2].getColor(Box.FRONT);
+
+
+        temp[0][0][2].setColor(Box.FRONT,kubiki[0][0][0].getColor(Box.LEFT));
+        temp[1][0][2].setColor(Box.FRONT,kubiki[0][0][1].getColor(Box.LEFT));
+        temp[2][0][2].setColor(Box.FRONT,kubiki[0][0][2].getColor(Box.LEFT));
+
+        temp[0][0][0].setColor(Box.LEFT,kubiki[2][0][0].getColor(Box.BACK));
+        temp[0][0][1].setColor(Box.LEFT,kubiki[1][0][0].getColor(Box.BACK));
+        temp[0][0][2].setColor(Box.LEFT,kubiki[0][0][0].getColor(Box.BACK));
+
+        temp[2][0][0].setColor(Box.BACK,kubiki[2][0][2].getColor(Box.RIGHT));
+        temp[1][0][0].setColor(Box.BACK,kubiki[2][0][1].getColor(Box.RIGHT));
+        temp[0][0][0].setColor(Box.BACK,kubiki[2][0][0].getColor(Box.RIGHT));
+
+        temp[2][0][2].setColor(Box.RIGHT,kolortemp1);
+        temp[2][0][1].setColor(Box.RIGHT,kolortemp2);
+        temp[2][0][0].setColor(Box.RIGHT,kolortemp3);
+
+
+
+
+        return temp;
+    }
+
+
+
 }
