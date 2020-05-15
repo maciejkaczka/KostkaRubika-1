@@ -149,12 +149,52 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             System.out.println("wcisnąalem l");
 
 
-            kubiki = Lprim(kubiki);
+            kubiki = Lprim(0, kubiki);
+        }
+        if (e.getKeyChar() == 's') {
+
+
+            kubiki = Lprim(1, kubiki);
+        }
+        if (e.getKeyChar() == 'r') {
+
+
+            kubiki = Lprim(2, kubiki);
         }
 
         if (e.getKeyChar() == 'b') {
 
-           kubiki= B(kubiki);
+           kubiki= B(0, kubiki);
+
+
+        }
+        if (e.getKeyChar() == 'n') {
+
+            kubiki= B(1, kubiki);
+
+
+        }
+        if (e.getKeyChar() == 'm') {
+
+            kubiki= B(2, kubiki);
+
+
+        }
+        if (e.getKeyChar() == 'q') {
+
+            kubiki= xd(0, kubiki);
+
+
+        }
+        if (e.getKeyChar() == 'w') {
+
+            kubiki= xd(1, kubiki);
+
+
+        }
+        if (e.getKeyChar() == 'e') {
+
+            kubiki= xd(2, kubiki);
 
 
         }
@@ -169,7 +209,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
 
     }
-    public Cubie[][][] Lprim(Cubie[][][] kubiki)
+    public Cubie[][][] Lprim(int i, Cubie[][][] kubiki)
     {
 
         System.out.println("translacja macierzy");
@@ -177,26 +217,60 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         temp = kubiki.clone();
 
 
-        Color3f kolortemp1 = kubiki[0][2][2].getColor(Box.FRONT);
-        Color3f kolortemp2 = kubiki[0][1][2].getColor(Box.FRONT);
-        Color3f kolortemp3 = kubiki[0][0][2].getColor(Box.FRONT);
 
 
-        temp[0][2][2].setColor(Box.FRONT,kubiki[0][2][0].getColor(Box.TOP));
-        temp[0][1][2].setColor(Box.FRONT,kubiki[0][2][1].getColor(Box.TOP));
-        temp[0][0][2].setColor(Box.FRONT,kubiki[0][2][2].getColor(Box.TOP));
+        Color3f kolortemp1 = kubiki[i][2][2].getColor(Box.FRONT);
+        Color3f kolortemp2 = kubiki[i][1][2].getColor(Box.FRONT);
+        Color3f kolortemp3 = kubiki[i][0][2].getColor(Box.FRONT);
 
-        temp[0][2][0].setColor(Box.TOP,kubiki[0][0][0].getColor(Box.BACK));
-        temp[0][2][1].setColor(Box.TOP,kubiki[0][1][0].getColor(Box.BACK));
-        temp[0][2][2].setColor(Box.TOP,kubiki[0][2][0].getColor(Box.BACK));
 
-        temp[0][0][0].setColor(Box.BACK,kubiki[0][0][2].getColor(Box.BOTTOM));
-        temp[0][1][0].setColor(Box.BACK,kubiki[0][0][1].getColor(Box.BOTTOM));
-        temp[0][2][0].setColor(Box.BACK,kubiki[0][0][0].getColor(Box.BOTTOM));
+        temp[i][2][2].setColor(Box.FRONT,kubiki[i][2][0].getColor(Box.TOP));
+        temp[i][1][2].setColor(Box.FRONT,kubiki[i][2][1].getColor(Box.TOP));
+        temp[i][0][2].setColor(Box.FRONT,kubiki[i][2][2].getColor(Box.TOP));
 
-        temp[0][0][2].setColor(Box.BOTTOM,kolortemp1);
-        temp[0][0][1].setColor(Box.BOTTOM,kolortemp2);
-        temp[0][0][0].setColor(Box.BOTTOM,kolortemp3);
+        temp[i][2][0].setColor(Box.TOP,kubiki[i][0][0].getColor(Box.BACK));
+        temp[i][2][1].setColor(Box.TOP,kubiki[i][1][0].getColor(Box.BACK));
+        temp[i][2][2].setColor(Box.TOP,kubiki[i][2][0].getColor(Box.BACK));
+
+        temp[i][0][0].setColor(Box.BACK,kubiki[i][0][2].getColor(Box.BOTTOM));
+        temp[i][1][0].setColor(Box.BACK,kubiki[i][0][1].getColor(Box.BOTTOM));
+        temp[i][2][0].setColor(Box.BACK,kubiki[i][0][0].getColor(Box.BOTTOM));
+
+        temp[i][0][2].setColor(Box.BOTTOM,kolortemp1);
+        temp[i][0][1].setColor(Box.BOTTOM,kolortemp2);
+        temp[i][0][0].setColor(Box.BOTTOM,kolortemp3);
+
+        switch(i) {
+            case 0:
+                Color3f kolortemp4 = kubiki[i][2][2].getColor(Box.LEFT);
+                Color3f kolortemp5 = kubiki[i][2][1].getColor(Box.LEFT);
+                temp[i][2][2].setColor(Box.LEFT, kubiki[i][2][0].getColor(Box.LEFT));
+                temp[i][2][1].setColor(Box.LEFT, kubiki[i][1][0].getColor(Box.LEFT));
+                temp[i][2][0].setColor(Box.LEFT, kubiki[i][0][0].getColor(Box.LEFT));
+                temp[i][1][0].setColor(Box.LEFT, kubiki[i][0][1].getColor(Box.LEFT));
+                temp[i][0][0].setColor(Box.LEFT, kubiki[i][0][2].getColor(Box.LEFT));
+                temp[i][0][1].setColor(Box.LEFT, kubiki[i][1][2].getColor(Box.LEFT));
+                temp[i][0][2].setColor(Box.LEFT, kolortemp4);
+                temp[i][1][2].setColor(Box.LEFT, kolortemp5);
+                break;
+            case 2:
+                Color3f kolortemp6 = kubiki[i][2][2].getColor(Box.RIGHT);
+                Color3f kolortemp7 = kubiki[i][2][1].getColor(Box.RIGHT);
+                temp[i][2][2].setColor(Box.RIGHT, kubiki[i][2][0].getColor(Box.RIGHT));
+                temp[i][2][1].setColor(Box.RIGHT, kubiki[i][1][0].getColor(Box.RIGHT));
+                temp[i][2][0].setColor(Box.RIGHT, kubiki[i][0][0].getColor(Box.RIGHT));
+                temp[i][1][0].setColor(Box.RIGHT, kubiki[i][0][1].getColor(Box.RIGHT));
+                temp[i][0][0].setColor(Box.RIGHT, kubiki[i][0][2].getColor(Box.RIGHT));
+                temp[i][0][1].setColor(Box.RIGHT, kubiki[i][1][2].getColor(Box.RIGHT));
+                temp[i][0][2].setColor(Box.RIGHT, kolortemp6);
+                temp[i][1][2].setColor(Box.RIGHT, kolortemp7);
+
+
+                break;
+
+        }
+
+
 
 
 
@@ -206,32 +280,122 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     }
 
-    public Cubie[][][] B(Cubie[][][] kubiki)
+
+    public Cubie[][][] B(int j, Cubie[][][] kubiki)
     {
         System.out.println("translacja macierzy");
         Cubie[][][] temp  = new Cubie[3][3][3];
         temp= kubiki.clone();
 
-        Color3f kolortemp1 = kubiki[0][0][2].getColor(Box.FRONT);
-        Color3f kolortemp2 = kubiki[1][0][2].getColor(Box.FRONT);
-        Color3f kolortemp3 = kubiki[2][0][2].getColor(Box.FRONT);
+        Color3f kolortemp1 = kubiki[0][j][2].getColor(Box.FRONT);
+        Color3f kolortemp2 = kubiki[1][j][2].getColor(Box.FRONT);
+        Color3f kolortemp3 = kubiki[2][j][2].getColor(Box.FRONT);
 
 
-        temp[0][0][2].setColor(Box.FRONT,kubiki[0][0][0].getColor(Box.LEFT));
-        temp[1][0][2].setColor(Box.FRONT,kubiki[0][0][1].getColor(Box.LEFT));
-        temp[2][0][2].setColor(Box.FRONT,kubiki[0][0][2].getColor(Box.LEFT));
+        temp[0][j][2].setColor(Box.FRONT,kubiki[0][j][0].getColor(Box.LEFT));
+        temp[1][j][2].setColor(Box.FRONT,kubiki[0][j][1].getColor(Box.LEFT));
+        temp[2][j][2].setColor(Box.FRONT,kubiki[0][j][2].getColor(Box.LEFT));
 
-        temp[0][0][0].setColor(Box.LEFT,kubiki[2][0][0].getColor(Box.BACK));
-        temp[0][0][1].setColor(Box.LEFT,kubiki[1][0][0].getColor(Box.BACK));
-        temp[0][0][2].setColor(Box.LEFT,kubiki[0][0][0].getColor(Box.BACK));
+        temp[0][j][0].setColor(Box.LEFT,kubiki[2][j][0].getColor(Box.BACK));
+        temp[0][j][1].setColor(Box.LEFT,kubiki[1][j][0].getColor(Box.BACK));
+        temp[0][j][2].setColor(Box.LEFT,kubiki[0][j][0].getColor(Box.BACK));
 
-        temp[2][0][0].setColor(Box.BACK,kubiki[2][0][2].getColor(Box.RIGHT));
-        temp[1][0][0].setColor(Box.BACK,kubiki[2][0][1].getColor(Box.RIGHT));
-        temp[0][0][0].setColor(Box.BACK,kubiki[2][0][0].getColor(Box.RIGHT));
+        temp[2][j][0].setColor(Box.BACK,kubiki[2][j][2].getColor(Box.RIGHT));
+        temp[1][j][0].setColor(Box.BACK,kubiki[2][j][1].getColor(Box.RIGHT));
+        temp[0][j][0].setColor(Box.BACK,kubiki[2][j][0].getColor(Box.RIGHT));
 
-        temp[2][0][2].setColor(Box.RIGHT,kolortemp1);
-        temp[2][0][1].setColor(Box.RIGHT,kolortemp2);
-        temp[2][0][0].setColor(Box.RIGHT,kolortemp3);
+        temp[2][j][2].setColor(Box.RIGHT,kolortemp1);
+        temp[2][j][1].setColor(Box.RIGHT,kolortemp2);
+        temp[2][j][0].setColor(Box.RIGHT,kolortemp3);
+
+        switch (j){
+            case 0:
+                Color3f kolortemp4 = kubiki[2][j][2].getColor(Box.BOTTOM);
+                Color3f kolortemp5 = kubiki[1][j][2].getColor(Box.BOTTOM);
+                temp[2][j][2].setColor(Box.BOTTOM,kubiki[0][j][2].getColor(Box.BOTTOM));
+                temp[1][j][2].setColor(Box.BOTTOM,kubiki[0][j][1].getColor(Box.BOTTOM));
+                temp[0][j][2].setColor(Box.BOTTOM,kubiki[0][j][0].getColor(Box.BOTTOM));
+                temp[0][j][1].setColor(Box.BOTTOM,kubiki[1][j][0].getColor(Box.BOTTOM));
+                temp[0][j][0].setColor(Box.BOTTOM,kubiki[2][j][0].getColor(Box.BOTTOM));
+                temp[1][j][0].setColor(Box.BOTTOM,kubiki[2][j][1].getColor(Box.BOTTOM));
+                temp[2][j][0].setColor(Box.BOTTOM,kolortemp4);
+                temp[2][j][1].setColor(Box.BOTTOM,kolortemp5);
+                break;
+            case 2:
+                Color3f kolortemp6 = kubiki[2][j][2].getColor(Box.TOP);
+                Color3f kolortemp7 = kubiki[1][j][2].getColor(Box.TOP);
+                temp[2][j][2].setColor(Box.TOP,kubiki[0][j][2].getColor(Box.TOP));
+                temp[1][j][2].setColor(Box.TOP,kubiki[0][j][1].getColor(Box.TOP));
+                temp[0][j][2].setColor(Box.TOP,kubiki[0][j][0].getColor(Box.TOP));
+                temp[0][j][1].setColor(Box.TOP,kubiki[1][j][0].getColor(Box.TOP));
+                temp[0][j][0].setColor(Box.TOP,kubiki[2][j][0].getColor(Box.TOP));
+                temp[1][j][0].setColor(Box.TOP,kubiki[2][j][1].getColor(Box.TOP));
+                temp[2][j][0].setColor(Box.TOP,kolortemp6);
+                temp[2][j][1].setColor(Box.TOP,kolortemp7);
+                break;
+
+        }
+
+
+
+
+        return temp;
+    }
+    public Cubie[][][] xd(int k, Cubie[][][] kubiki)
+    {
+        System.out.println("translacja macierzy");
+        Cubie[][][] temp  = new Cubie[3][3][3];
+        temp= kubiki.clone();
+
+        Color3f kolortemp1 = kubiki[2][2][k].getColor(Box.TOP);
+        Color3f kolortemp2 = kubiki[1][2][k].getColor(Box.TOP);
+        Color3f kolortemp3 = kubiki[0][2][k].getColor(Box.TOP);
+
+
+        temp[0][2][k].setColor(Box.TOP,kubiki[0][0][k].getColor(Box.LEFT));
+        temp[1][2][k].setColor(Box.TOP,kubiki[0][1][k].getColor(Box.LEFT));
+        temp[2][2][k].setColor(Box.TOP,kubiki[0][2][k].getColor(Box.LEFT));
+
+        temp[0][2][k].setColor(Box.LEFT,kubiki[0][0][k].getColor(Box.BOTTOM));
+        temp[0][1][k].setColor(Box.LEFT,kubiki[1][0][k].getColor(Box.BOTTOM));
+        temp[0][0][k].setColor(Box.LEFT,kubiki[2][0][k].getColor(Box.BOTTOM));
+
+        temp[0][0][k].setColor(Box.BOTTOM,kubiki[2][0][k].getColor(Box.RIGHT));
+        temp[1][0][k].setColor(Box.BOTTOM,kubiki[2][1][k].getColor(Box.RIGHT));
+        temp[2][0][k].setColor(Box.BOTTOM,kubiki[2][2][k].getColor(Box.RIGHT));
+
+        temp[2][0][k].setColor(Box.RIGHT,kolortemp1);
+        temp[2][1][k].setColor(Box.RIGHT,kolortemp2);
+        temp[2][2][k].setColor(Box.RIGHT,kolortemp3);
+
+        switch (k){
+            case 0:
+                Color3f kolortemp6 = kubiki[0][2][k].getColor(Box.BACK);
+                Color3f kolortemp7 = kubiki[0][1][k].getColor(Box.BACK);
+                temp[0][2][k].setColor(Box.BACK,kubiki[0][0][k].getColor(Box.BACK));
+                temp[0][1][k].setColor(Box.BACK,kubiki[1][0][k].getColor(Box.BACK));
+                temp[0][0][k].setColor(Box.BACK,kubiki[2][0][k].getColor(Box.BACK));
+                temp[1][0][k].setColor(Box.BACK,kubiki[2][1][k].getColor(Box.BACK));
+                temp[2][0][k].setColor(Box.BACK,kubiki[2][2][k].getColor(Box.BACK));
+                temp[2][1][k].setColor(Box.BACK,kubiki[1][2][k].getColor(Box.BACK));
+                temp[2][2][k].setColor(Box.BACK,kolortemp6);
+                temp[1][2][k].setColor(Box.BACK,kolortemp7);
+                break;
+            case 2:
+                Color3f kolortemp4 = kubiki[0][2][k].getColor(Box.FRONT);
+                Color3f kolortemp5 = kubiki[0][1][k].getColor(Box.FRONT);
+                temp[0][2][k].setColor(Box.FRONT,kubiki[0][0][k].getColor(Box.FRONT));
+                temp[0][1][k].setColor(Box.FRONT,kubiki[1][0][k].getColor(Box.FRONT));
+                temp[0][0][k].setColor(Box.FRONT,kubiki[2][0][k].getColor(Box.FRONT));
+                temp[1][0][k].setColor(Box.FRONT,kubiki[2][1][k].getColor(Box.FRONT));
+                temp[2][0][k].setColor(Box.FRONT,kubiki[2][2][k].getColor(Box.FRONT));
+                temp[2][1][k].setColor(Box.FRONT,kubiki[1][2][k].getColor(Box.FRONT));
+                temp[2][2][k].setColor(Box.FRONT,kolortemp4);
+                temp[1][2][k].setColor(Box.FRONT,kolortemp5);
+                break;
+
+
+        }
 
 
 
