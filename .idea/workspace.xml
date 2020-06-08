@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ae2fa3cf-793b-4682-8dc7-0a4cc3b204c0" name="Default Changelist" comment="Wywalone śmieci tekstowe i kamera po środku">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KostkaRubika/Cubie.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KostkaRubika/Cubie.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/KostkaRubika/KostkaRubika.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KostkaRubika/KostkaRubika.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KostkaRubika.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KostkaRubika.java" afterDir="false" />
     </list>
@@ -105,25 +104,25 @@
       <screen x="0" y="0" width="1600" height="860" />
     </state>
     <state x="454" y="24" key="CommitChangelistDialog2/0.0.1600.860@0.0.1600.860" timestamp="1588611793913" />
-    <state width="754" height="220" key="GridCell.Tab.0.bottom" timestamp="1589580299340">
+    <state width="1557" height="220" key="GridCell.Tab.0.bottom" timestamp="1591622741119">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="754" height="220" key="GridCell.Tab.0.bottom/0.0.1600.860@0.0.1600.860" timestamp="1589580299340" />
+    <state width="1557" height="220" key="GridCell.Tab.0.bottom/0.0.1600.860@0.0.1600.860" timestamp="1591622741119" />
     <state width="1415" height="162" key="GridCell.Tab.0.bottom/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
-    <state width="754" height="220" key="GridCell.Tab.0.center" timestamp="1589580299340">
+    <state width="1557" height="220" key="GridCell.Tab.0.center" timestamp="1591622741119">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="754" height="220" key="GridCell.Tab.0.center/0.0.1600.860@0.0.1600.860" timestamp="1589580299340" />
+    <state width="1557" height="220" key="GridCell.Tab.0.center/0.0.1600.860@0.0.1600.860" timestamp="1591622741119" />
     <state width="1415" height="162" key="GridCell.Tab.0.center/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
-    <state width="754" height="220" key="GridCell.Tab.0.left" timestamp="1589580299339">
+    <state width="1557" height="220" key="GridCell.Tab.0.left" timestamp="1591622741119">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="754" height="220" key="GridCell.Tab.0.left/0.0.1600.860@0.0.1600.860" timestamp="1589580299339" />
+    <state width="1557" height="220" key="GridCell.Tab.0.left/0.0.1600.860@0.0.1600.860" timestamp="1591622741119" />
     <state width="1415" height="162" key="GridCell.Tab.0.left/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
-    <state width="754" height="220" key="GridCell.Tab.0.right" timestamp="1589580299340">
+    <state width="1557" height="220" key="GridCell.Tab.0.right" timestamp="1591622741119">
       <screen x="0" y="0" width="1600" height="860" />
     </state>
-    <state width="754" height="220" key="GridCell.Tab.0.right/0.0.1600.860@0.0.1600.860" timestamp="1589580299340" />
+    <state width="1557" height="220" key="GridCell.Tab.0.right/0.0.1600.860@0.0.1600.860" timestamp="1591622741119" />
     <state width="1415" height="162" key="GridCell.Tab.0.right/78.0.1458.864@78.0.1458.864" timestamp="1588432711366" />
     <state x="152" y="68" key="MergeDialog" timestamp="1589573839359">
       <screen x="0" y="0" width="1600" height="860" />

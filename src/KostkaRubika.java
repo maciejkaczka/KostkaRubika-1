@@ -19,6 +19,8 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     public Cubie[][][] kubiki = new Cubie[3][3][3];
     TransformGroup obrocsie;
+    public Cubie[][][][] testkub = new Cubie[9][3][3][3];
+    public int liczbaruchow = 0;
 
 
 
@@ -145,12 +147,17 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(liczbaruchow<10) {
+            liczbaruchow++;
+        }
+        testkub=gitara(liczbaruchow, testkub, kubiki);
         if (e.getKeyChar() == 'l') {
             System.out.println("wcisnąalem l");
 
 
             kubiki = Lprim(0, kubiki);
         }
+
         if (e.getKeyChar() == 's') {
 
 
@@ -198,6 +205,15 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
 
         }
+        if (e.getKeyChar() == 'p') {
+            liczbaruchow=liczbaruchow-2;
+            kubiki= kek(kubiki, testkub, liczbaruchow);
+
+
+        }
+
+
+
     }
 
     @Override
@@ -209,11 +225,36 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
 
     }
+
+    public Cubie[][][] kek(Cubie[][][] kubiki, Cubie[][][][] testkub, int liczbaruchow){
+        for(int i=0; i<3; i++){
+            for(int j=0; j<3; j++){
+                for(int k=0; k<3; k++){
+                    kubiki[i][j][k]=testkub[liczbaruchow][i][j][k];
+                }
+            }
+        }
+        return kubiki;
+    }
+
+    public Cubie[][][][] gitara(int liczbaruchow, Cubie[][][][]testkub, Cubie[][][]kubiki)
+    {
+        if(liczbaruchow<10){
+            for(int i=0; i<3; i++){
+                for(int j=0; j<3; j++){
+                    for(int k=0; k<3; k++){
+                        testkub[liczbaruchow-1][i][j][k]=kubiki[i][j][k];
+                    }
+                }
+            }
+        }
+        return testkub;
+    }
     public Cubie[][][] Lprim(int i, Cubie[][][] kubiki)
     {
 
         System.out.println("translacja macierzy");
-        Cubie[][][] temp  = new Cubie[3][3][3];
+        Cubie[][][] temp;
         temp = kubiki.clone();
 
 
@@ -284,7 +325,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public Cubie[][][] B(int j, Cubie[][][] kubiki)
     {
         System.out.println("translacja macierzy");
-        Cubie[][][] temp  = new Cubie[3][3][3];
+        Cubie[][][] temp;
         temp= kubiki.clone();
 
         Color3f kolortemp1 = kubiki[0][j][2].getColor(Box.FRONT);
@@ -344,7 +385,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public Cubie[][][] xd(int k, Cubie[][][] kubiki)
     {
         System.out.println("translacja macierzy");
-        Cubie[][][] temp  = new Cubie[3][3][3];
+        Cubie[][][] temp;
         temp= kubiki.clone();
 
         Color3f kolortemp1 = kubiki[2][2][k].getColor(Box.TOP);
