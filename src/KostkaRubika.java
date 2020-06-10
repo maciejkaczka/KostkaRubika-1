@@ -1,19 +1,21 @@
-import com.sun.j3d.utils.behaviors.mouse.MouseRotate;
+
+import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.universe.SimpleUniverse;
-
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Vector;
+import java.util.TimerTask;
+
 
 
 public class KostkaRubika extends JFrame implements KeyListener, ActionListener {
@@ -22,8 +24,6 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     TransformGroup obrocsie;
     public int liczbaruchow = 1;
     public int[][][] zakodowaneKolory = new int[100][27][6]; //wstepnie max 100 ruchow
-   // public int[][] kolejneRuchy = new int[][];
-
 
 
     public KostkaRubika() {
@@ -39,21 +39,31 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         canvas3D.setPreferredSize(new Dimension(800, 600));
         add(canvas3D);
 
-
         canvas3D.addKeyListener(this);
 
         pack();
         setVisible(true);
 
-
         BranchGroup scena = createSceneGraph();
         scena.compile();
         SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
+        OrbitBehavior kamera = new OrbitBehavior(canvas3D,OrbitBehavior.REVERSE_ALL);
+
+        BoundingSphere bound = new BoundingSphere();
+        kamera.setSchedulingBounds(bound);
+
+        Transform3D przesuniecie_obserwatora = new Transform3D();
+        Transform3D rot_obs = new Transform3D();
+        rot_obs.rotY((float)(-Math.PI/7));
+        przesuniecie_obserwatora.set(new Vector3f(-1.2f,1.5f,2.0f));
+        przesuniecie_obserwatora.mul(rot_obs);
+        rot_obs.rotX((float)(-Math.PI/6));
+        przesuniecie_obserwatora.mul(rot_obs);
+
+        simpleU.getViewingPlatform().getViewPlatformTransform().setTransform(przesuniecie_obserwatora);
 
 
-
-
-        simpleU.getViewingPlatform().setNominalViewingTransform();
+        simpleU.getViewingPlatform().setViewPlatformBehavior(kamera);
         simpleU.addBranchGraph(scena);
 
 
@@ -62,22 +72,8 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     public BranchGroup createSceneGraph() {
         BranchGroup objRoot = new BranchGroup();
-
         float size = (float) 0.15;
 
-        obrocsie = new TransformGroup();
-
-        obrocsie.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        obrocsie.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-
-
-
-
-        TransformGroup objRotate = new TransformGroup();
-        objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        objRotate.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-
-        objRotate.addChild(obrocsie);
         int i = -1, j = -1, k = -1;
 
         for (float x = (float) -0.31; x < 0.32; x = x + (float) 0.31) {
@@ -94,24 +90,18 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
 
 
-
+                    //@@@@@@@@@@@@@@@@@@@@@ TEKST INDEKSU @@@@@@@@@@@@@
                     Font czcionka = new Font("Calibri",1,1);
                     czcionka = czcionka.deriveFont((float) 0.1);
-
                     Font3D font3d = new Font3D(czcionka,null);
-                    // Build 3D text geometry using the 3D font
                     Text3D tex = new Text3D();
                     tex.setFont3D(font3d);
-
                     tex.setString("i"+i+j+k);
                     System.out.println(i +" " + " "+j);
                     tex.setAlignment(Text3D.ALIGN_CENTER);
-
-
                     Appearance app = new Appearance();
-
-
                     Shape3D shape = new Shape3D(tex,app);
+                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
                     Transform3D transform = new Transform3D();
@@ -119,20 +109,13 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                     transform.setTranslation(vector);
                     TransformGroup przesuniecie = new TransformGroup(transform);
                     przesuniecie.addChild(shape);
-                    obrocsie.addChild(przesuniecie);
-                    obrocsie.addChild(kostka.getTgX());
+                    objRoot.addChild(przesuniecie);
+                    objRoot.addChild(kostka.getTgX());
                 }
             }
 
         }
         zapiszStanKostki(0,kubiki,zakodowaneKolory);
-        objRoot.addChild(objRotate);
-
-
-        MouseRotate myMouseRotate = new MouseRotate();
-        myMouseRotate.setTransformGroup(objRotate);
-        myMouseRotate.setSchedulingBounds(new BoundingSphere());
-        objRoot.addChild(myMouseRotate);
 
 
 
@@ -155,21 +138,30 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
         if (e.getKeyChar() == 'l') {
             System.out.println("wcisnąalem l");
-
-
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(0);
             kubiki = Lprim(0, kubiki);
             zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
             liczbaruchow++;
         }
 
         if (e.getKeyChar() == 's') {
-
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja1();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(1);
 
             kubiki = Lprim(1, kubiki);
             zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
             liczbaruchow++;
         }
         if (e.getKeyChar() == 'r') {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja2();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(2);
 
             kubiki = Lprim(2, kubiki);
             zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
@@ -177,13 +169,20 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         }
 
         if (e.getKeyChar() == 'b') {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja3();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(3);
 
             kubiki= B(0, kubiki);
-
             zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
             liczbaruchow++;
         }
         if (e.getKeyChar() == 'n') {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja4();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(4);
 
             kubiki= B(1, kubiki);
 
@@ -191,13 +190,20 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             liczbaruchow++;
         }
         if (e.getKeyChar() == 'm') {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja5();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(5);
 
             kubiki= B(2, kubiki);
-
             zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
             liczbaruchow++;
         }
         if (e.getKeyChar() == 'q') {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja6();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(6);
 
             kubiki= xd(0, kubiki);
 
@@ -205,6 +211,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             liczbaruchow++;
         }
         if (e.getKeyChar() == 'w') {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja7();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(7);
 
             kubiki= xd(1, kubiki);
 
@@ -212,6 +222,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             liczbaruchow++;
         }
         if (e.getKeyChar() == 'e') {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja8();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(8);
 
             kubiki= xd(2, kubiki);
 
@@ -223,11 +237,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             System.out.println("CHUJ CI W PIZDE JAVA");
             wczytajStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
 
-
-
         }
-
-
 
 
     }
@@ -241,12 +251,348 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
 
     }
-    /*
-    public void kolejnyRuch(int[] kolejneRuchy, int numer_ruchu)
-    {
-        kolejneRuchy[numer_ruchu]=zakodowaneKolory
+    public void cofnijAnimacje(int numer_akcji) {
+        Transform3D temp;
+        Transform3D tempdelta = new Transform3D();
+        switch (numer_akcji) {
+            case 0:
+                {
+                tempdelta.rotX(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[0][i][j].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[0][i][j].getTgX().setTransform(temp);
+
+                    }
+                }
+                break;
+            }
+            case 1:
+                {
+                    tempdelta.rotX(-Math.PI / 2);
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            temp = kubiki[1][i][j].getTransformX();
+                            temp.mul(tempdelta);
+                            kubiki[1][i][j].getTgX().setTransform(temp);
+
+                        }
+                    }
+                    break;
+                }
+            case 2:
+            {
+                tempdelta.rotX(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[2][i][j].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[2][i][j].getTgX().setTransform(temp);
+
+                    }
+                }
+                break;
+            }
+            case 3:
+            {
+                tempdelta.rotY(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[i][0][j].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[i][0][j].getTgX().setTransform(temp);
+
+                    }
+                }
+                break;
+            }
+            case 4:
+            {
+                tempdelta.rotY(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[i][1][j].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[i][1][j].getTgX().setTransform(temp);
+
+                    }
+                }
+                break;
+            }
+            case 5:
+            {
+                tempdelta.rotY(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[i][2][j].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[i][2][j].getTgX().setTransform(temp);
+                    }
+                }
+                break;
+            }
+            case 6:
+            {
+                tempdelta.rotZ(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[i][j][0].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[i][j][0].getTgX().setTransform(temp);
+                    }
+                }
+                break;
+            }
+            case 7:
+            {
+                tempdelta.rotZ(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[i][j][1].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[i][j][1].getTgX().setTransform(temp);
+                    }
+                }
+                break;
+            }
+            case 8:
+            {
+                tempdelta.rotZ(-Math.PI / 2);
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        temp = kubiki[i][j][2].getTransformX();
+                        temp.mul(tempdelta);
+                        kubiki[i][j][2].getTgX().setTransform(temp);
+                    }
+                }
+                break;
+            }
+        }
+
     }
-    */
+
+
+    public class animacja extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotX(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[0][i][j].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[0][i][j].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+
+    }
+    public class animacja1 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotX(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[1][i][j].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[1][i][j].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+    public class animacja2 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotX(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[2][i][j].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[2][i][j].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+    public class animacja3 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotY(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[i][0][j].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[i][0][j].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+    public class animacja4 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotY(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[i][1][j].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[i][1][j].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+    public class animacja5 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotY(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[i][2][j].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[i][2][j].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+    public class animacja6 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotZ(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[i][j][0].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[i][j][0].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+    public class animacja7 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotZ(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[i][j][1].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[i][j][1].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+    public class animacja8 extends TimerTask
+    {
+        int licznik =0;
+        public void run()
+        {
+            System.out.println(licznik);
+            licznik++;
+            if (licznik>24) {cancel();}
+
+            double zmiana;
+            zmiana = Math.PI / 50;
+            Transform3D temp = new Transform3D();
+            Transform3D tempdelta= new Transform3D();
+            tempdelta.rotZ(zmiana);
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = kubiki[i][j][2].getTransformX();
+                    temp.mul(tempdelta);
+                    kubiki[i][j][2].getTgX().setTransform(temp);
+
+                }
+            }
+        }
+    }
+
+
+
 
     public void zapiszStanKostki( int liczbaruchow, Cubie[][][] kubiki,int[][][] zakodowaneKolory){
 
@@ -259,10 +605,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 {
                     for(int l=0;l<6;l++)
                     {
-                       // System.out.println("licznik wynosi: " +licznik);
-                        //System.out.println("L wynosi: " +l);
                         zakodowaneKolory[liczbaruchow][licznik][l]=kubiki[i][j][k].getColorInt(l);
-
                     }
                     licznik++;
                 }
@@ -281,10 +624,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 {
                     for(int l=0;l<6;l++)
                     {
-
-                        //System.out.println("L wynosi: " +l);
                         kubiki[i][j][k].setColor(l,zakodowaneKolory[0][licznik][l]);
-                        ;
                     }
                     licznik++;
                 }
@@ -299,8 +639,6 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         System.out.println("translacja macierzy");
         Cubie[][][] temp;
         temp = kubiki.clone();
-
-
 
 
         Color3f kolortemp1 = kubiki[i][2][2].getColor(Box.FRONT);
@@ -348,20 +686,9 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 temp[i][0][1].setColor(Box.RIGHT, kubiki[i][1][2].getColor(Box.RIGHT));
                 temp[i][0][2].setColor(Box.RIGHT, kolortemp6);
                 temp[i][1][2].setColor(Box.RIGHT, kolortemp7);
-
-
                 break;
-
         }
-
-
-
-
-
         return temp;
-
-
-
     }
 
 
@@ -392,37 +719,32 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         temp[2][j][1].setColor(Box.RIGHT,kolortemp2);
         temp[2][j][0].setColor(Box.RIGHT,kolortemp3);
 
-        switch (j){
+        switch (j) {
             case 0:
                 Color3f kolortemp4 = kubiki[2][j][2].getColor(Box.BOTTOM);
                 Color3f kolortemp5 = kubiki[1][j][2].getColor(Box.BOTTOM);
-                temp[2][j][2].setColor(Box.BOTTOM,kubiki[0][j][2].getColor(Box.BOTTOM));
-                temp[1][j][2].setColor(Box.BOTTOM,kubiki[0][j][1].getColor(Box.BOTTOM));
-                temp[0][j][2].setColor(Box.BOTTOM,kubiki[0][j][0].getColor(Box.BOTTOM));
-                temp[0][j][1].setColor(Box.BOTTOM,kubiki[1][j][0].getColor(Box.BOTTOM));
-                temp[0][j][0].setColor(Box.BOTTOM,kubiki[2][j][0].getColor(Box.BOTTOM));
-                temp[1][j][0].setColor(Box.BOTTOM,kubiki[2][j][1].getColor(Box.BOTTOM));
-                temp[2][j][0].setColor(Box.BOTTOM,kolortemp4);
-                temp[2][j][1].setColor(Box.BOTTOM,kolortemp5);
+                temp[2][j][2].setColor(Box.BOTTOM, kubiki[0][j][2].getColor(Box.BOTTOM));
+                temp[1][j][2].setColor(Box.BOTTOM, kubiki[0][j][1].getColor(Box.BOTTOM));
+                temp[0][j][2].setColor(Box.BOTTOM, kubiki[0][j][0].getColor(Box.BOTTOM));
+                temp[0][j][1].setColor(Box.BOTTOM, kubiki[1][j][0].getColor(Box.BOTTOM));
+                temp[0][j][0].setColor(Box.BOTTOM, kubiki[2][j][0].getColor(Box.BOTTOM));
+                temp[1][j][0].setColor(Box.BOTTOM, kubiki[2][j][1].getColor(Box.BOTTOM));
+                temp[2][j][0].setColor(Box.BOTTOM, kolortemp4);
+                temp[2][j][1].setColor(Box.BOTTOM, kolortemp5);
                 break;
             case 2:
                 Color3f kolortemp6 = kubiki[2][j][2].getColor(Box.TOP);
                 Color3f kolortemp7 = kubiki[1][j][2].getColor(Box.TOP);
-                temp[2][j][2].setColor(Box.TOP,kubiki[0][j][2].getColor(Box.TOP));
-                temp[1][j][2].setColor(Box.TOP,kubiki[0][j][1].getColor(Box.TOP));
-                temp[0][j][2].setColor(Box.TOP,kubiki[0][j][0].getColor(Box.TOP));
-                temp[0][j][1].setColor(Box.TOP,kubiki[1][j][0].getColor(Box.TOP));
-                temp[0][j][0].setColor(Box.TOP,kubiki[2][j][0].getColor(Box.TOP));
-                temp[1][j][0].setColor(Box.TOP,kubiki[2][j][1].getColor(Box.TOP));
-                temp[2][j][0].setColor(Box.TOP,kolortemp6);
-                temp[2][j][1].setColor(Box.TOP,kolortemp7);
+                temp[2][j][2].setColor(Box.TOP, kubiki[0][j][2].getColor(Box.TOP));
+                temp[1][j][2].setColor(Box.TOP, kubiki[0][j][1].getColor(Box.TOP));
+                temp[0][j][2].setColor(Box.TOP, kubiki[0][j][0].getColor(Box.TOP));
+                temp[0][j][1].setColor(Box.TOP, kubiki[1][j][0].getColor(Box.TOP));
+                temp[0][j][0].setColor(Box.TOP, kubiki[2][j][0].getColor(Box.TOP));
+                temp[1][j][0].setColor(Box.TOP, kubiki[2][j][1].getColor(Box.TOP));
+                temp[2][j][0].setColor(Box.TOP, kolortemp6);
+                temp[2][j][1].setColor(Box.TOP, kolortemp7);
                 break;
-
         }
-
-
-
-
         return temp;
     }
     public Cubie[][][] xd(int k, Cubie[][][] kubiki)
@@ -477,16 +799,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 temp[2][2][k].setColor(Box.FRONT,kolortemp4);
                 temp[1][2][k].setColor(Box.FRONT,kolortemp5);
                 break;
-
-
         }
-
-
-
-
         return temp;
     }
-
-
-
 }
