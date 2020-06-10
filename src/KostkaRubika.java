@@ -20,9 +20,9 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     public Cubie[][][] kubiki = new Cubie[3][3][3];
     TransformGroup obrocsie;
-   // public Cubie[][][] testkub = new Cubie[3][3][3];
-    public int liczbaruchow = 0;
-    public Vector<Cubie[][][]> stanKubikow= new Vector<>();
+    public int liczbaruchow = 1;
+    public int[][][] zakodowaneKolory = new int[100][27][6]; //wstepnie max 100 ruchow
+   // public int[][] kolejneRuchy = new int[][];
 
 
 
@@ -38,7 +38,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         Canvas3D canvas3D = new Canvas3D(config);
         canvas3D.setPreferredSize(new Dimension(800, 600));
         add(canvas3D);
-        // go.addActionListener(this);
+
 
         canvas3D.addKeyListener(this);
 
@@ -125,6 +125,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             }
 
         }
+        zapiszStanKostki(0,kubiki,zakodowaneKolory);
         objRoot.addChild(objRotate);
 
 
@@ -132,6 +133,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         myMouseRotate.setTransformGroup(objRotate);
         myMouseRotate.setSchedulingBounds(new BoundingSphere());
         objRoot.addChild(myMouseRotate);
+
 
 
         return objRoot;
@@ -149,72 +151,82 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(liczbaruchow<10) {
-            liczbaruchow++;
-        }
-       
-        stanKubikow.addElement( gitara(liczbaruchow,kubiki));
+
+
         if (e.getKeyChar() == 'l') {
             System.out.println("wcisnąalem l");
 
 
             kubiki = Lprim(0, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
 
         if (e.getKeyChar() == 's') {
 
 
             kubiki = Lprim(1, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
         if (e.getKeyChar() == 'r') {
 
-
             kubiki = Lprim(2, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
 
         if (e.getKeyChar() == 'b') {
 
             kubiki= B(0, kubiki);
 
-
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
         if (e.getKeyChar() == 'n') {
 
             kubiki= B(1, kubiki);
 
-
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
         if (e.getKeyChar() == 'm') {
 
             kubiki= B(2, kubiki);
 
-
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
         if (e.getKeyChar() == 'q') {
 
             kubiki= xd(0, kubiki);
 
-
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
         if (e.getKeyChar() == 'w') {
 
             kubiki= xd(1, kubiki);
 
-
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
         if (e.getKeyChar() == 'e') {
 
             kubiki= xd(2, kubiki);
 
-
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
         }
         if (e.getKeyChar() == 'p') {
-            liczbaruchow=liczbaruchow-2;
+            //liczbaruchow=liczbaruchow-2;
             System.out.println("CHUJ CI W PIZDE JAVA");
-           kek(kubiki);
+            wczytajStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+
 
 
         }
+
 
 
 
@@ -229,45 +241,56 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
 
     }
+    /*
+    public void kolejnyRuch(int[] kolejneRuchy, int numer_ruchu)
+    {
+        kolejneRuchy[numer_ruchu]=zakodowaneKolory
+    }
+    */
 
-    public void kek( Cubie[][][] kubiki){
-        Cubie[][][] testkub;
-        testkub=stanKubikow.elementAt(0).clone();
-        Color3f kolortemp;
-        for(int i=0; i<3; i++){
-            for(int j=0; j<3; j++){
-                for(int k=0; k<3; k++){
-                    for(int l=0;l<3;l++)
+    public void zapiszStanKostki( int liczbaruchow, Cubie[][][] kubiki,int[][][] zakodowaneKolory){
+
+        int licznik =0;
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                for(int k=0;k<3;k++)
+                {
+                    for(int l=0;l<6;l++)
                     {
-                        kolortemp = testkub[i][j][k].getColor(l);
-                        kubiki[i][j][k].setColor(l,kolortemp);
+                       // System.out.println("licznik wynosi: " +licznik);
+                        //System.out.println("L wynosi: " +l);
+                        zakodowaneKolory[liczbaruchow][licznik][l]=kubiki[i][j][k].getColorInt(l);
+
                     }
+                    licznik++;
                 }
             }
         }
-
-
-
     }
 
-    public Cubie[][][] gitara(int liczbaruchow, Cubie[][][] kubiki)
+    public void wczytajStanKostki(int liczbaruchow, Cubie[][][] kubiki,int[][][] zakodowaneKolory)
     {
-        Cubie[][][] testkub;
-        testkub=kubiki.clone();
-        Color3f kolortemp = new Color3f();
-        if(liczbaruchow<10){
-            for(int i=0; i<3; i++){
-                for(int j=0; j<3; j++){
-                    for(int k=0; k<3; k++){
-                        for(int l=0;l<6;l++) {
-                            kolortemp = kubiki[i][j][k].getColor(l);
-                            testkub[i][j][k].setColor(l,kolortemp);
-                        }
+        int licznik =0;
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                for(int k=0;k<3;k++)
+                {
+                    for(int l=0;l<6;l++)
+                    {
+
+                        //System.out.println("L wynosi: " +l);
+                        kubiki[i][j][k].setColor(l,zakodowaneKolory[0][licznik][l]);
+                        ;
                     }
+                    licznik++;
                 }
             }
         }
-        return testkub;
+
 
     }
     public Cubie[][][] Lprim(int i, Cubie[][][] kubiki)

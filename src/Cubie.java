@@ -1,4 +1,3 @@
-
 import javax.media.j3d.*;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
@@ -29,8 +28,8 @@ public class Cubie {
     private  Color3f Black = new Color3f(0.1f, 0.1f, 0.1f);
 
 
-    private  int[] faces = { Box.TOP, Box.FRONT, Box.RIGHT,
-            Box.BACK, Box.LEFT, Box.BOTTOM };
+    private  int[] faces = { Box.FRONT, Box.BACK, Box.RIGHT,
+            Box.LEFT, Box.TOP, Box.BOTTOM };
 
     private Appearance[] app =
             {getAppearance(0), getAppearance(1),
@@ -87,16 +86,12 @@ public class Cubie {
         rotacjaX.addChild(przesuniecie);
     /*
         rotacjaY = new TransformGroup(tfY);
-
         rotacjaY.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         rotacjaY.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
         rotacjaY.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
         rotacjaY.setCapability(TransformGroup.ALLOW_CHILDREN_WRITE);
         rotacjaY.addChild(rotacjaX);
-
-
         rotacjaZ = new TransformGroup(tfZ);
-
         rotacjaZ.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         rotacjaZ.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
         rotacjaZ.setCapability(TransformGroup.ALLOW_CHILDREN_READ);
@@ -122,7 +117,7 @@ public class Cubie {
     {
 
         // rotacjaX.getTransform(tfX);
-         return tfX;
+        return tfX;
     }
 
     public Transform3D getTransformY()
@@ -135,7 +130,7 @@ public class Cubie {
     public Transform3D getTransformZ()
     {
 
-       // rotacjaZ.getTransform(tfZ);
+        // rotacjaZ.getTransform(tfZ);
         return tfZ;
     }
 
@@ -160,10 +155,28 @@ public class Cubie {
     {
         Color3f temp = new Color3f();
         Shape3D  szejp =new Shape3D();
-        szejp =  kubik.getShape(i);
+        szejp =  kubik.getShape(faces[i]);
         szejp.getAppearance().getColoringAttributes().getColor(temp);
         return temp;
 
+    }
+
+    public int getColorInt(int numer_sciany)
+    {
+        int numer_koloru;
+        Color3f temp = new Color3f();
+        temp = getColor(numer_sciany);
+        System.out.println(temp);
+
+        if(temp.equals(Green)){numer_koloru=0;System.out.println("Zielony");}
+        else if(temp.equals(Yellow)){numer_koloru=1;System.out.println("Zólty");}
+        else if(temp.equals(Blue)){numer_koloru=2;System.out.println("Niebieski");}
+        else if(temp.equals(Orange)){numer_koloru=3;System.out.println("Pomaranczowy");}
+        else if(temp.equals(Red)){numer_koloru=4;System.out.println("czerwony ");}
+        else if(temp.equals(White)){numer_koloru=5;System.out.println("Bialy");}
+        else {System.out.println("Bledny kolor");numer_koloru=6;}
+
+        return numer_koloru;
     }
 
     public void setColor(int i,Color3f kolor)
@@ -179,6 +192,19 @@ public class Cubie {
         szejp =  kubik.getShape(i);
         szejp.setAppearance(tempapp);
 
+
+    }
+
+    public void setColor(int numer_sciany, int numer_koloru)
+    {
+        Appearance tempapp = new Appearance();
+        Color3f kol = ktoryKolor(numer_koloru);
+        ColoringAttributes att = new ColoringAttributes(kol,ColoringAttributes.NICEST);
+        tempapp.setColoringAttributes(att);
+
+        Shape3D  szejp;
+        szejp =  kubik.getShape(faces[numer_sciany]);
+        szejp.setAppearance(tempapp);
 
     }
 
@@ -210,16 +236,17 @@ public class Cubie {
     {
         switch(x)
         {
-            case 0: return Red;
-            case 1: return Green;
+            case 0: return Green;
+            case 1: return Yellow;
             case 2: return Blue;
-            case 3: return Yellow;
-            case 4: return Orange;
+            case 3: return Orange;
+            case 4: return Red;
             case 5: return White;
-
         }
         return Black;
     }
+
+
 
 
 
