@@ -114,23 +114,33 @@ public class Cubie {
 
     }
 
-    public int getColorInt(int numer_sciany)
-    {
+    public int getColorInt(int numer_sciany) {
         int numer_koloru;
         Color3f temp = new Color3f();
         temp = getColor(numer_sciany);
-        System.out.println(temp);
 
-        if(temp.equals(Green)){numer_koloru=0;System.out.println("Zielony");}
-        else if(temp.equals(Yellow)){numer_koloru=1;System.out.println("Zólty");}
-        else if(temp.equals(Blue)){numer_koloru=2;System.out.println("Niebieski");}
-        else if(temp.equals(Orange)){numer_koloru=3;System.out.println("Pomaranczowy");}
-        else if(temp.equals(Red)){numer_koloru=4;System.out.println("czerwony ");}
-        else if(temp.equals(White)){numer_koloru=5;System.out.println("Bialy");}
-        else {System.out.println("Bledny kolor");numer_koloru=6;}
 
-        return numer_koloru;
-    }
+        if (temp.equals(Green)) {
+            numer_koloru = 0;
+        }
+        else if (temp.equals(Yellow)) {
+                numer_koloru = 1;
+            } else if (temp.equals(Blue)) {
+                numer_koloru = 2;
+            } else if (temp.equals(Orange)) {
+                numer_koloru = 3;
+            } else if (temp.equals(Red)) {
+                numer_koloru = 4;
+            } else if (temp.equals(White)) {
+                numer_koloru = 5;
+            } else {
+                System.out.println("Bledny kolor");
+                numer_koloru = 6;
+            }
+
+            return numer_koloru;
+        }
+
 
     public Box getCubie()
     {

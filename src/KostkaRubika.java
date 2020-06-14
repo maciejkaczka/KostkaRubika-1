@@ -1,13 +1,14 @@
 
 import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.Sphere;
+import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import javax.media.j3d.*;
 import javax.swing.*;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.vecmath.Color3f;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.TimerTask;
-
+import java.util.Vector;
 
 
 public class KostkaRubika extends JFrame implements KeyListener, ActionListener {
@@ -23,7 +24,23 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public Cubie[][][] kubiki = new Cubie[3][3][3];
     TransformGroup obrocsie;
     public int liczbaruchow = 1;
-    public int[][][] zakodowaneKolory = new int[100][27][6]; //wstepnie max 100 ruchow
+    public int[][][] zakodowaneKolory = new int[500][27][6]; //wstepnie max 100 ruchow
+
+    Vector<KeyEvent> nagrane_przyciski = new Vector<KeyEvent>();
+
+    boolean key_a;
+    boolean key_s;
+    boolean key_d;
+    boolean key_z;
+    boolean key_x;
+    boolean key_c;
+    boolean key_q;
+    boolean key_w;
+    boolean key_e;
+
+    boolean odtwarzanie;
+    boolean wcisniete;
+
 
 
     public KostkaRubika() {
@@ -31,39 +48,37 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
         super("KostkaRubika");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+
+        setResizable(true);
+
         GraphicsConfiguration config =
                 SimpleUniverse.getPreferredConfiguration();
 
         Canvas3D canvas3D = new Canvas3D(config);
-        canvas3D.setPreferredSize(new Dimension(800, 600));
+        canvas3D.setSize(800,600);
         add(canvas3D);
-
-        canvas3D.addKeyListener(this);
 
         pack();
         setVisible(true);
 
+        canvas3D.addKeyListener(this);
         BranchGroup scena = createSceneGraph();
         scena.compile();
-        SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
-        OrbitBehavior kamera = new OrbitBehavior(canvas3D,OrbitBehavior.REVERSE_ALL);
 
+        SimpleUniverse simpleU = new SimpleUniverse(canvas3D);
+
+        OrbitBehavior kamera = new OrbitBehavior(canvas3D,OrbitBehavior.REVERSE_ALL);
         BoundingSphere bound = new BoundingSphere();
         kamera.setSchedulingBounds(bound);
-
         Transform3D przesuniecie_obserwatora = new Transform3D();
-        Transform3D rot_obs = new Transform3D();
-        rot_obs.rotY((float)(-Math.PI/7));
-        przesuniecie_obserwatora.set(new Vector3f(-1.2f,1.5f,2.0f));
-        przesuniecie_obserwatora.mul(rot_obs);
-        rot_obs.rotX((float)(-Math.PI/6));
-        przesuniecie_obserwatora.mul(rot_obs);
+        przesuniecie_obserwatora.set(new Vector3f(0f,0f,4f));
+
+        simpleU.getViewingPlatform().setNominalViewingTransform();
+
 
         simpleU.getViewingPlatform().getViewPlatformTransform().setTransform(przesuniecie_obserwatora);
-
-
         simpleU.getViewingPlatform().setViewPlatformBehavior(kamera);
+
         simpleU.addBranchGraph(scena);
 
 
@@ -71,6 +86,24 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
 
     public BranchGroup createSceneGraph() {
+
+        Appearance wyglad_sfera = new Appearance();
+
+        TextureLoader loader = new TextureLoader("src/clouds.gif",this);
+         ImageComponent2D image = loader.getImage();
+
+        Texture2D chmury = new  Texture2D(Texture.BASE_LEVEL, Texture.RGBA,
+                image.getWidth(), image.getHeight());
+
+        chmury.setImage(0, image);
+        chmury.setBoundaryModeS(Texture.WRAP);
+        chmury.setBoundaryModeT(Texture.WRAP);
+
+        wyglad_sfera.setTexture(chmury);
+
+
+
+
         BranchGroup objRoot = new BranchGroup();
         float size = (float) 0.15;
 
@@ -86,40 +119,169 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                     k++;
                     Cubie kostka = new Cubie(size, x, y, z);
                     kubiki[i][j][k] = kostka;
-
-
-
-
-                    //@@@@@@@@@@@@@@@@@@@@@ TEKST INDEKSU @@@@@@@@@@@@@
-                    Font czcionka = new Font("Calibri",1,1);
-                    czcionka = czcionka.deriveFont((float) 0.1);
-                    Font3D font3d = new Font3D(czcionka,null);
-                    Text3D tex = new Text3D();
-                    tex.setFont3D(font3d);
-                    tex.setString("i"+i+j+k);
-                    System.out.println(i +" " + " "+j);
-                    tex.setAlignment(Text3D.ALIGN_CENTER);
-                    Appearance app = new Appearance();
-                    Shape3D shape = new Shape3D(tex,app);
-                    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-                    Transform3D transform = new Transform3D();
-                    Vector3d vector = new Vector3d( x+1, y, z);
-                    transform.setTranslation(vector);
-                    TransformGroup przesuniecie = new TransformGroup(transform);
-                    przesuniecie.addChild(shape);
-                    objRoot.addChild(przesuniecie);
                     objRoot.addChild(kostka.getTgX());
                 }
+
+
             }
 
         }
+      //  Sphere kula = new Sphere(20f,Sphere.GENERATE_NORMALS_INWARD|Sphere.GENERATE_TEXTURE_COORDS,wyglad_sfera);
+       // objRoot.addChild(kula);
+
+
         zapiszStanKostki(0,kubiki,zakodowaneKolory);
 
 
 
         return objRoot;
+    }
+
+    public void funkcjeObrotu()
+    {
+
+        Button a = new Button("click");
+        KeyEvent key_A = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_A, 'A');
+        KeyEvent key_S = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_S, 'S');
+        KeyEvent key_D = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_D, 'D');
+        KeyEvent key_Z = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_Z, 'Z');
+        KeyEvent key_X = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_X, 'X');
+        KeyEvent key_C = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_C, 'C');
+        KeyEvent key_Q = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_Q, 'Q');
+        KeyEvent key_W = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_W, 'W');
+        KeyEvent key_E = new KeyEvent(a, 1, 20, 1, KeyEvent.VK_E, 'E');
+
+        if(key_a == true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(0);
+            kubiki = obrotPierwsz(0, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) {nagrane_przyciski.add(key_A);}
+            System.out.println(wcisniete);
+
+        }
+        else if(key_s ==true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja1();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(1);
+
+            kubiki = obrotPierwsz(1, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) {nagrane_przyciski.add(key_S);}
+            System.out.println(wcisniete);
+
+        }
+        else if(key_d == true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja2();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(2);
+
+            kubiki = obrotPierwsz(2, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) {nagrane_przyciski.add(key_D);}
+            System.out.println(wcisniete);
+
+        }
+        else if(key_z ==true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja3();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(3);
+
+            kubiki= obrotDrugi(0, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) { nagrane_przyciski.add(key_Z);}
+            System.out.println(wcisniete);
+
+        }
+        else if(key_x == true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja4();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(4);
+
+            kubiki= obrotDrugi(1, kubiki);
+
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) {nagrane_przyciski.add(key_X);}
+            System.out.println(wcisniete);
+
+        }
+        else if(key_c ==true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja5();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(5);
+
+            kubiki= obrotDrugi(2, kubiki);
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) {nagrane_przyciski.add(key_C);}
+            System.out.println(wcisniete);
+
+        }
+        else if(key_q == true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja6();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(6);
+
+            kubiki= obrotTrzeci(0, kubiki);
+
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) { nagrane_przyciski.add(key_Q);}
+            System.out.println(wcisniete);
+
+        }
+        else if(key_w ==true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja7();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(7);
+
+            kubiki= obrotTrzeci(1, kubiki);
+
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) {nagrane_przyciski.add(key_W); }
+            System.out.println(wcisniete);
+
+        }
+        else if(key_e ==true)
+        {
+            java.util.Timer timer = new java.util.Timer(true);
+            TimerTask timerTask= new animacja8();
+            timer.scheduleAtFixedRate(timerTask,0,10);
+            cofnijAnimacje(8);
+
+            kubiki= obrotTrzeci(2, kubiki);
+
+            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
+            liczbaruchow++;
+            if (odtwarzanie==false) { nagrane_przyciski.add(key_E);}
+            System.out.println(wcisniete);
+
+        }
+        else wcisniete=false;
+
     }
 
 
@@ -134,109 +296,64 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (wcisniete==false) {
+            wcisniete=true;
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A:
+                    key_a = true;
+                    break;
+                case KeyEvent.VK_S:
+                    key_s = true;
+                    break;
+                case KeyEvent.VK_D:
+                    key_d = true;
+                    break;
+                case KeyEvent.VK_Z:
+                    key_z = true;
+                    break;
+                case KeyEvent.VK_X:
+                    key_x = true;
+                    break;
+                case KeyEvent.VK_C:
+                    key_c = true;
+                    break;
+                case KeyEvent.VK_Q:
+                    key_q = true;
+                    break;
+                case KeyEvent.VK_W:
+                    key_w = true;
+                    break;
+                case KeyEvent.VK_E:
+                    key_e = true;
+                    break;
+            }
+            funkcjeObrotu();
 
 
-        if (e.getKeyChar() == 'l') {
-            System.out.println("wcisnąalem l");
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(0);
-            kubiki = Lprim(0, kubiki);
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
 
-        if (e.getKeyChar() == 's') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja1();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(1);
+            if (e.getKeyChar() == 'p') {
+                if (liczbaruchow > 5) {
+                    odtwarzanie = true;
+                    wcisniete = false;
+                   // liczbaruchow = liczbaruchow - nagrane_przyciski.size();
 
-            kubiki = Lprim(1, kubiki);
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
-        if (e.getKeyChar() == 'r') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja2();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(2);
+                    wczytajStanKostki(liczbaruchow, kubiki, zakodowaneKolory);
 
-            kubiki = Lprim(2, kubiki);
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
+                    for (int i = 0; i < nagrane_przyciski.size(); i++) {
+                        try {
+                            Thread.sleep(600);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                        keyPressed(nagrane_przyciski.elementAt(i));
+                        keyReleased(nagrane_przyciski.elementAt(i));
 
-        if (e.getKeyChar() == 'b') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja3();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(3);
+                    }
+                    nagrane_przyciski.clear();
+                    odtwarzanie = false;
 
-            kubiki= B(0, kubiki);
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
-        if (e.getKeyChar() == 'n') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja4();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(4);
-
-            kubiki= B(1, kubiki);
-
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
-        if (e.getKeyChar() == 'm') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja5();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(5);
-
-            kubiki= B(2, kubiki);
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
-        if (e.getKeyChar() == 'q') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja6();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(6);
-
-            kubiki= xd(0, kubiki);
-
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
-        if (e.getKeyChar() == 'w') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja7();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(7);
-
-            kubiki= xd(1, kubiki);
-
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
-        if (e.getKeyChar() == 'e') {
-            java.util.Timer timer = new java.util.Timer(true);
-            TimerTask timerTask= new animacja8();
-            timer.scheduleAtFixedRate(timerTask,0,10);
-            cofnijAnimacje(8);
-
-            kubiki= xd(2, kubiki);
-
-            zapiszStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-            liczbaruchow++;
-        }
-        if (e.getKeyChar() == 'p') {
-            //liczbaruchow=liczbaruchow-2;
-            System.out.println("CHUJ CI W PIZDE JAVA");
-            wczytajStanKostki(liczbaruchow,kubiki,zakodowaneKolory);
-
+                }
+            }
         }
 
 
@@ -244,6 +361,36 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     @Override
     public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_A:
+                key_a = false;
+                break;
+            case KeyEvent.VK_S:
+                key_s = false;
+                break;
+            case KeyEvent.VK_D:
+                key_d = false;
+                break;
+            case KeyEvent.VK_Z:
+                key_z = false;
+                break;
+            case KeyEvent.VK_X:
+                key_x = false;
+                break;
+            case KeyEvent.VK_C:
+                key_c = false;
+                break;
+            case KeyEvent.VK_Q:
+                key_q = false;
+                break;
+            case KeyEvent.VK_W:
+                key_w = false;
+                break;
+            case KeyEvent.VK_E:
+                key_e = false;
+                break;
+        }
+
 
     }
 
@@ -251,6 +398,11 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
 
     }
+
+
+
+
+
     public void cofnijAnimacje(int numer_akcji) {
         Transform3D temp;
         Transform3D tempdelta = new Transform3D();
@@ -266,6 +418,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                     }
                 }
+
                 break;
             }
             case 1:
@@ -279,8 +432,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                         }
                     }
+
                     break;
                 }
+
             case 2:
             {
                 tempdelta.rotX(-Math.PI / 2);
@@ -292,6 +447,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                     }
                 }
+
                 break;
             }
             case 3:
@@ -305,6 +461,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                     }
                 }
+
                 break;
             }
             case 4:
@@ -330,7 +487,9 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                         kubiki[i][2][j].getTgX().setTransform(temp);
                     }
                 }
+
                 break;
+
             }
             case 6:
             {
@@ -342,6 +501,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                         kubiki[i][j][0].getTgX().setTransform(temp);
                     }
                 }
+
                 break;
             }
             case 7:
@@ -366,21 +526,21 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                         kubiki[i][j][2].getTgX().setTransform(temp);
                     }
                 }
+
                 break;
             }
         }
 
     }
 
-
     public class animacja extends TimerTask
     {
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -397,15 +557,17 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             }
         }
 
+
     }
     public class animacja1 extends TimerTask
     {
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
+
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -420,6 +582,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                 }
             }
+
         }
     }
     public class animacja2 extends TimerTask
@@ -427,9 +590,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
+
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -444,6 +608,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                 }
             }
+
         }
     }
     public class animacja3 extends TimerTask
@@ -451,9 +616,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
+
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -468,6 +634,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                 }
             }
+
         }
     }
     public class animacja4 extends TimerTask
@@ -475,9 +642,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
+
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -492,6 +660,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                 }
             }
+
         }
     }
     public class animacja5 extends TimerTask
@@ -499,9 +668,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
+
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -523,9 +693,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
+
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -540,6 +711,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                 }
             }
+
         }
     }
     public class animacja7 extends TimerTask
@@ -547,9 +719,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
+
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {cancel();
+                wcisniete=false;}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -564,6 +737,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
                 }
             }
+
         }
     }
     public class animacja8 extends TimerTask
@@ -571,9 +745,10 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         int licznik =0;
         public void run()
         {
-            System.out.println(licznik);
             licznik++;
-            if (licznik>24) {cancel();}
+            if (licznik>24) {
+                wcisniete=false;
+                cancel();}
 
             double zmiana;
             zmiana = Math.PI / 50;
@@ -589,12 +764,14 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 }
             }
         }
+
     }
 
 
 
 
-    public void zapiszStanKostki( int liczbaruchow, Cubie[][][] kubiki,int[][][] zakodowaneKolory){
+    public void zapiszStanKostki( int liczbaruchow, Cubie[][][] kubiki,int[][][] zakodowaneKolory)
+    {
 
         int licznik =0;
         for(int i=0;i<3;i++)
@@ -612,7 +789,6 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             }
         }
     }
-
     public void wczytajStanKostki(int liczbaruchow, Cubie[][][] kubiki,int[][][] zakodowaneKolory)
     {
         int licznik =0;
@@ -633,10 +809,11 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
 
     }
-    public Cubie[][][] Lprim(int i, Cubie[][][] kubiki)
+
+    public Cubie[][][] obrotPierwsz(int i, Cubie[][][] kubiki)
     {
 
-        System.out.println("translacja macierzy");
+
         Cubie[][][] temp;
         temp = kubiki.clone();
 
@@ -690,11 +867,9 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         }
         return temp;
     }
-
-
-    public Cubie[][][] B(int j, Cubie[][][] kubiki)
+    public Cubie[][][] obrotDrugi(int j, Cubie[][][] kubiki)
     {
-        System.out.println("translacja macierzy");
+
         Cubie[][][] temp;
         temp= kubiki.clone();
 
@@ -747,9 +922,9 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
         }
         return temp;
     }
-    public Cubie[][][] xd(int k, Cubie[][][] kubiki)
+    public Cubie[][][] obrotTrzeci(int k, Cubie[][][] kubiki)
     {
-        System.out.println("translacja macierzy");
+
         Cubie[][][] temp;
         temp= kubiki.clone();
 
