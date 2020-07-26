@@ -1,8 +1,6 @@
 
 import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.geometry.Box;
-import com.sun.j3d.utils.geometry.Sphere;
-import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import javax.media.j3d.*;
 import javax.swing.*;
@@ -24,7 +22,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
     public Cubie[][][] kubiki = new Cubie[3][3][3];
     TransformGroup obrocsie;
     public int liczbaruchow = 1;
-    public int[][][] zakodowaneKolory = new int[500][27][6]; //wstepnie max 100 ruchow
+    public int[][][] zakodowaneKolory = new int[500][27][6]; //wstepnie max 500 ruchow
 
     Vector<KeyEvent> nagrane_przyciski = new Vector<KeyEvent>();
 
@@ -87,28 +85,11 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     public BranchGroup createSceneGraph() {
 
-        Appearance wyglad_sfera = new Appearance();
-
-        TextureLoader loader = new TextureLoader("src/clouds.gif",this);
-         ImageComponent2D image = loader.getImage();
-
-        Texture2D chmury = new  Texture2D(Texture.BASE_LEVEL, Texture.RGBA,
-                image.getWidth(), image.getHeight());
-
-        chmury.setImage(0, image);
-        chmury.setBoundaryModeS(Texture.WRAP);
-        chmury.setBoundaryModeT(Texture.WRAP);
-
-        wyglad_sfera.setTexture(chmury);
-
-
-
-
         BranchGroup objRoot = new BranchGroup();
         float size = (float) 0.15;
 
         int i = -1, j = -1, k = -1;
-
+        // Tutaj tworzymy poszczegolne kubiki
         for (float x = (float) -0.31; x < 0.32; x = x + (float) 0.31) {
             j = -1;
             i++;
@@ -126,17 +107,12 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             }
 
         }
-      //  Sphere kula = new Sphere(20f,Sphere.GENERATE_NORMALS_INWARD|Sphere.GENERATE_TEXTURE_COORDS,wyglad_sfera);
-       // objRoot.addChild(kula);
-
-
+        //zapisujemy początkowy stan kostki
         zapiszStanKostki(0,kubiki,zakodowaneKolory);
-
-
 
         return objRoot;
     }
-
+    //funkcja okreslajaca jak zmienic kostke wzgledem wcisnietego klawisza
     public void funkcjeObrotu()
     {
 
@@ -330,12 +306,11 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             funkcjeObrotu();
 
 
-
+            // odtworzenie wszystkich ruchow
             if (e.getKeyChar() == 'p') {
                 if (liczbaruchow > 5) {
                     odtwarzanie = true;
                     wcisniete = false;
-                   // liczbaruchow = liczbaruchow - nagrane_przyciski.size();
 
                     wczytajStanKostki(liczbaruchow, kubiki, zakodowaneKolory);
 
@@ -349,7 +324,6 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                         keyReleased(nagrane_przyciski.elementAt(i));
 
                     }
-                    nagrane_przyciski.clear();
                     odtwarzanie = false;
 
                 }
@@ -402,7 +376,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
 
 
-
+    // funkcja cofajaca animacje
     public void cofnijAnimacje(int numer_akcji) {
         Transform3D temp;
         Transform3D tempdelta = new Transform3D();
@@ -493,7 +467,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             }
             case 6:
             {
-                tempdelta.rotZ(-Math.PI / 2);
+                tempdelta.rotZ(Math.PI / 2);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         temp = kubiki[i][j][0].getTransformX();
@@ -506,7 +480,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             }
             case 7:
             {
-                tempdelta.rotZ(-Math.PI / 2);
+                tempdelta.rotZ(Math.PI / 2);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         temp = kubiki[i][j][1].getTransformX();
@@ -518,7 +492,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
             }
             case 8:
             {
-                tempdelta.rotZ(-Math.PI / 2);
+                tempdelta.rotZ(Math.PI / 2);
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
                         temp = kubiki[i][j][2].getTransformX();
@@ -533,6 +507,8 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
 
     }
 
+
+    //animacje obrotu
     public class animacja extends TimerTask
     {
         int licznik =0;
@@ -699,7 +675,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 wcisniete=false;}
 
             double zmiana;
-            zmiana = Math.PI / 50;
+            zmiana = -Math.PI / 50;
             Transform3D temp = new Transform3D();
             Transform3D tempdelta= new Transform3D();
             tempdelta.rotZ(zmiana);
@@ -725,7 +701,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 wcisniete=false;}
 
             double zmiana;
-            zmiana = Math.PI / 50;
+            zmiana = -Math.PI / 50;
             Transform3D temp = new Transform3D();
             Transform3D tempdelta= new Transform3D();
             tempdelta.rotZ(zmiana);
@@ -751,7 +727,7 @@ public class KostkaRubika extends JFrame implements KeyListener, ActionListener 
                 cancel();}
 
             double zmiana;
-            zmiana = Math.PI / 50;
+            zmiana = -Math.PI / 50;
             Transform3D temp = new Transform3D();
             Transform3D tempdelta= new Transform3D();
             tempdelta.rotZ(zmiana);
